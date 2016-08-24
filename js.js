@@ -92,8 +92,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return arr
     }
 
+    valid ([row, col]) {
+      return (row >= 0 && row < this.size[0] &&
+        col >= 0 && col < this.size[1])
+    }
+
     get([row, col]) {
-      return this.tiles[row][col]
+      if(this.valid([row, col]))
+        return this.tiles[row][col]
+      else return undefined
     }
 
     render() {
@@ -129,6 +136,24 @@ document.addEventListener("DOMContentLoaded", () => {
       this.city = undefined
       this.color = undefined
     }
+
+    neighbors () {
+      const x = this.pos[0]
+      const y = this.pos[1]
+      let neighbors = [
+        [x, y-1],
+        [x, y+1],
+        [x-1, y],
+        [x+1, y-1],
+        [x+1, y],
+        [x+1, y+1]
+      ]
+      if(y % 2 === 0){
+        neighbors[3] = [x-1, y-1]
+        neighbors[5] = [x-1, y+1]
+      }
+      return neighbors.map(pos => this.board.get(pos)).filter(neighbor => neighbor)
+    }
   }
   
   class Player {
@@ -143,13 +168,17 @@ document.addEventListener("DOMContentLoaded", () => {
       tile.color = this.color
       tile.city = true
       tile.army = new Army(this.color)
+      this.armies.push(tile.army)
     }
 
     move(tile) {
-      if (this.base === undefined)
+      if (this.base === undefined){
         this.setHomeBase(tile)
-      else
-        alert("move not implemented yet")
+        tile.neighbors().forEach(tile => tile.color = this.color)
+      } else {
+        // if (this.armies.includes(tile.army))
+        tile.neighbors().forEach(tile => tile.color = this.color)
+      }
     }
 
     display() {
