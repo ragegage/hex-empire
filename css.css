@@ -91,6 +91,12 @@ city {
   border-radius: 15px;
   z-index: 3;
 }
+army.red {
+  border-color: #600;
+}
+army.blue {
+  border-color: #006;
+}
 
 army {
   border: 25px solid white;
@@ -98,7 +104,25 @@ army {
   position: absolute;
   left: 6px;
   top: 28px;
-  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0;
+  height: 0;
+}
+army.red {
+  border-color: #800;
+}
+army.blue {
+  border-color: #008;
+}
+army > span {
+  display: none;
+}
+.hex:hover > army > span {
+  display: block;
+  z-index: 5;
+  color: white;
 }
 
 
@@ -120,6 +144,16 @@ army {
 }
 .blue:after {
   border-left: 30px solid #00f;
+}
+
+.white, .selected {
+  background-color: #fff;
+}
+.white:before, .selected:before {
+  border-right: 30px solid #fff;
+}
+.white:after, .selected:after {
+  border-left: 30px solid #fff;
 }
 
 ul {
