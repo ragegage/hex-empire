@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const onlyUnique = (value, index, self) => {
+    return self.indexOf(value) === index
+  }
+
   const setupBoard = (game) => {
     $parent = $(".board")
     let rows, cols;
@@ -174,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     moveTo(newTile) {
-      if(this.tile.fullNeighbors().includes(newTile)) {
+      if(this.tile.fullTwoStepNeighbors().includes(newTile)) {
         this.tile.army = undefined
         this.tile = newTile
         if(this.tile.army){ // runs into another army
@@ -250,6 +254,15 @@ document.addEventListener("DOMContentLoaded", () => {
     neighbors () {
       return this.fullNeighbors()
                .filter(neighbor => !neighbor.army || !neighbor.city)
+    }
+
+    fullTwoStepNeighbors () {
+      let twoStepNeighbors = []
+      this.neighbors().forEach(neighbor => {
+        twoStepNeighbors = twoStepNeighbors.concat(neighbor.fullNeighbors())
+      })
+      return twoStepNeighbors.filter( onlyUnique )
+               .filter( tile => tile !== this )
     }
   }
 
