@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const render = (game) => {
     let gameState = game.render()
-    console.log(gameState)
+    // console.log(gameState) // for testing
     gameState.forEach(row => {
       row.forEach(tile => {
         let displayTile = $($('.board ul').eq(tile.pos[0]).children()[tile.pos[1]])
@@ -198,6 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
               this.tile.neighbors().forEach(neighbor => neighbor.color = this.color)
               if(this.tile.city) {
                 this.tile.city.color = this.color
+                this.tile.city.player = this.player
                 this.player.cities.push(this.tile.city)
               }
             }
@@ -207,6 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
           this.tile.color = this.color
           if(this.tile.city) {
             this.tile.city.color = this.color
+            this.tile.city.player = this.player
             this.player.cities.push(this.tile.city)
           }
           this.tile.neighbors().forEach(neighbor => neighbor.color = this.color)
@@ -279,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
         this.tile.army.increaseStrength(15)
       else {
         this.tile.army = new Army(this.color, this.tile, this.player)
+        console.log(this.player);
         this.player.armies.push(this.tile.army)
       }
     }
@@ -324,10 +327,10 @@ document.addEventListener("DOMContentLoaded", () => {
           }
           try {
             const oldTile = this.selectedArmy.tile
+            oldTile.selected = false
             this.selectedArmy.moveTo(tile)
             this.cities.forEach(city => city.naturalGrowth())
             this.hasMoved = true
-            oldTile.selected = false
             this.selectedArmy = undefined
           } catch(err) {
             this.hasMoved = false
