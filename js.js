@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
         this.currentIdx = 0
       // sees if the current player can make a move,
         // if not, next player's turn
-      if (this.players.every(player => player.base) && 
+      if (this.players.every(player => player.base) &&
         this.players[this.currentIdx].armies.every(army => army.hasMoved))
         this.endTurn()
     }
@@ -270,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
-  
+
   class Player {
     constructor(color) {
       this.color = color
@@ -301,8 +301,14 @@ document.addEventListener("DOMContentLoaded", () => {
           this.hasMoved = true
           this.selectedArmy = undefined
         } else if (this.selectedArmy) {
-          // allow user to move army from current location to new location... 
+          // allow user to move army from current location to new location...
             // if it's a valid move
+          if (tile.army === this.selectedArmy) {
+            // allow user to cancel selected army by clicking on it again
+            tile.selected = false
+            this.selectedArmy = undefined
+            return;
+          }
           try {
             const oldTile = this.selectedArmy.tile
             this.selectedArmy.moveTo(tile)
