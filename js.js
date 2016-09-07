@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const setupBoard = (game) => {
     $parent = $(".board")
-    let rows, cols;
+    let rows, cols
     [rows, cols] = game.size()
     for(let i = 0; i < rows; i++){
       let $ul = $("<ul></ul>")
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     addCities(rows, cols) {
-      let maxNumCities = 4
+      let maxNumCities = 10
       const odds = maxNumCities / (rows * cols)
 
       // loop through tiles
@@ -153,6 +153,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     render() {
       return this.tiles
+    }
+
+    getPlayerStrength(player) { // tells how many hexes are controlled by a player
+      // look through this.tiles
+        // count tiles with color === player.color
+      return this.tiles.reduce((accum, row) => (
+        accum + row.reduce((accum, tile) => (
+          tile.color === player.color ? accum + 1 : accum
+        ), 0)
+      ), 0)
     }
   }
 
@@ -276,12 +286,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     naturalGrowth() {
-      // if city has an army, army grows by 15
+      // if city has an army, army grows proportionally to amount of territory owned
       if (this.tile.army)
-        this.tile.army.increaseStrength(15)
+        this.tile.army.increaseStrength(Math.floor(this.tile.board.getPlayerStrength(this.player) / 3))
       else {
         this.tile.army = new Army(this.color, this.tile, this.player)
-        console.log(this.player);
+        console.log(this.player)
         this.player.armies.push(this.tile.army)
       }
     }
@@ -353,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  let game = new Game(5, 11)
+  let game = new Game(10, 18)
   setupBoard(game)
   addClickHandlers(game)
   render(game)
